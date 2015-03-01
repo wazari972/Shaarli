@@ -46,8 +46,10 @@
                 {/if}
                 <span class="linktitle"><a href="{$redirector}{$value.url|htmlspecialchars}">{$value.title|htmlspecialchars}</a></span>
                 <br>
-                {if="$value.description"}<div class="linkdescription"{if condition="$search_type=='permalink'"} style="max-height:none !important;"{/if}>{$value.description}</div>{/if}
-                <div class="thumbnail">{function="thumbnail($value['url'], isset($value['thumb']) ? $value['thumb'] : False)"}</div>
+		<div id="contentt">
+        	        {if="$value.description"}<div class="linkdescription"{if condition="$search_type=='permalink'"} style="max-height:none !important;"{/if}>{$value.description}</div>{/if}
+	                <div class="thumbnail">{function="thumbnail($value['url'], isset($value['thumb']) ? $value['thumb'] : False)"}</div>
+		</div>
                 <hr/>
                 <div class="linkinfos">
                 {if="!$GLOBALS['config']['HIDE_TIMESTAMPS'] || isLoggedIn()"}
