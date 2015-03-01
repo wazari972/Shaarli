@@ -1130,22 +1130,33 @@ function showDaily()
 {
     $LINKSDB=new linkdb(isLoggedIn() || $GLOBALS['config']['OPEN_SHAARLI']);  // Read links from database (and filter private links if used it not logged in).
 
+    if (isset($_GET["all"])) {
+	// create a 'real' array
+	$linksToDisplay = array();
+	foreach ($LINKSDB as $k => $v) {
+	    $linksToDisplay[$k] = $v;
+	}
+	$previousday='';
+        $nextday='';
+	$day=Date('Ymd',strtotime('0 day')); // Today, in format YYYYMMDD.
 
-    $day=Date('Ymd',strtotime('-1 day')); // Yesterday, in format YYYYMMDD.
-    if (isset($_GET['day'])) $day=$_GET['day'];
+    } else {
 
-    $days = $LINKSDB->days();
-    $i = array_search($day,$days);
-    if ($i==false) { $i=count($days)-1; $day=$days[$i]; }
-    $previousday='';
-    $nextday='';
-    if ($i!==false)
-    {
-        if ($i>1) $previousday=$days[$i-1];
-        if ($i<count($days)-1) $nextday=$days[$i+1];
+    	$day=Date('Ymd',strtotime('-1 day')); // Yesterday, in format YYYYMMDD.
+	if (isset($_GET['day'])) $day=$_GET['day'];
+
+	$days = $LINKSDB->days();
+	$i = array_search($day,$days);
+	if ($i==false) { $i=count($days)-1; $day=$days[$i]; }
+	$previousday='';
+	$nextday='';
+	if ($i!==false)
+	{
+	    if ($i>1) $previousday=$days[$i-1];
+	     if ($i<count($days)-1) $nextday=$days[$i+1];
+	}
+	$linksToDisplay=$LINKSDB->filterDay($day);
     }
-
-    $linksToDisplay=$LINKSDB->filterDay($day);
     // We pre-format some fields for proper output.
     foreach($linksToDisplay as $key=>$link)
     {
