@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>{include="includes"}
+{if="empty($GLOBALS['disablejquery'])"}	
+	<script src="inc/jquery.lazyload.min.js#"></script>
+{/if}
+</head>
+<body id="pictureWall">
+<div id="pageheader">{include="page.header"}</div>
+<div id="picwall_container">
+    {loop="linksToDisplay"}
+    <div class="picwall_pictureframe">
+	    {$value.thumbnail}<a href="{$value.permalink}"><span class="info">{$value.title|htmlspecialchars}</span></a>
+    </div>
+    {/loop}
+</div>
+{include="page.footer"}
+{if="empty($GLOBALS['disablejquery'])"} 
+<script>
+$(document).ready(function() {
+    $("img.lazyimage").show().lazyload();
+});
+</script>
+{/if} 
+</body>
+</html>
