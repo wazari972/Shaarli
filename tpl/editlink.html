@@ -28,6 +28,8 @@
             <input type="checkbox"  name="lf_private" id="lf_private">
             &nbsp;<label for="lf_private"><i>Private</i></label><br>
             {/if}
+	    <label for="lf_thumb"><i>Thumbnail</i></label><br>
+	    <input type="text" name="lf_thumb" value="{$link.thumb|htmlspecialchars}" style="width:100%"><br><br>
 	        <input type="submit" value="Save" name="save_edit" class="bigbutton">
 	        <input type="submit" value="Cancel" name="cancel_edit" class="bigbutton">
 	        {if="!$link_is_new"}<input type="submit" value="Delete" name="delete_link" class="bigbutton delete" onClick="return confirmDeleteLink();">{/if}
