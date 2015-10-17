@@ -886,7 +886,7 @@ function showDailyRSS() {
         foreach ($linkdates as $linkdate) {
             $l = $LINKSDB[$linkdate];
             $l['formatedDescription'] = nl2br(keepMultipleSpaces(text2clickable($l['description'])));
-            $l['thumbnail'] = thumbnail($l['url']);
+            $l['thumbnail'] = "1st".thumbnail($l['url'], isset($l['thumb']) ? $l['thumb'] : False);
             $l['timestamp'] = linkdate2timestamp($l['linkdate']);
             if (startsWith($l['url'], '?')) {
                 $l['url'] = index_url($_SERVER) . $l['url'];  // make permalink URL absolute
@@ -950,7 +950,7 @@ function showDaily()
         uasort($taglist, 'strcasecmp');
         $linksToDisplay[$key]['taglist']=$taglist;
         $linksToDisplay[$key]['formatedDescription']=nl2br(keepMultipleSpaces(text2clickable($link['description'])));
-        $linksToDisplay[$key]['thumbnail'] = thumbnail($link['url']);
+        $linksToDisplay[$key]['thumbnail'] = thumbnail($link['url'], isset($link['thumb']) ? $link['thumb'] : False);
         $linksToDisplay[$key]['timestamp'] = linkdate2timestamp($link['linkdate']);
     }
 
@@ -1072,7 +1072,7 @@ function renderPage()
         foreach($links as $link)
         {
             $permalink='?'.escape(smallhash($link['linkdate']));
-            $thumb=lazyThumbnail($link['url'],$permalink);
+            $thumb=lazyThumbnail($link['url'], isset($link['thumb']) ? $link['thumb'] : False);
             if ($thumb!='') // Only output links which have a thumbnail.
             {
                 $link['thumbnail']=$thumb; // Thumbnail HTML code.
@@ -1412,10 +1412,11 @@ function renderPage()
         $tags = implode(' ', array_unique(explode(' ', $tags))); // Remove duplicates.
         $linkdate=$_POST['lf_linkdate'];
         $url = trim($_POST['lf_url']);
+        $thumb = trim($_POST['lf_thumb']);   
         if (!startsWith($url,'http:') && !startsWith($url,'https:') && !startsWith($url,'ftp:') && !startsWith($url,'magnet:') && !startsWith($url,'?') && !startsWith($url,'javascript:'))
             $url = 'http://'.$url;
         $link = array('title'=>trim($_POST['lf_title']),'url'=>$url,'description'=>trim($_POST['lf_description']),'private'=>(isset($_POST['lf_private']) ? 1 : 0),
-                      'linkdate'=>$linkdate,'tags'=>str_replace(',',' ',$tags));
+                      'linkdate'=>$linkdate,'tags'=>str_replace(',',' ',$tags), 'thumb'=>$thumb);
         if ($link['title']=='') $link['title']=$link['url']; // If title is empty, use the URL as title.
 
         $pluginManager->executeHooks('save_link', $link);
@@ -1887,7 +1888,7 @@ function buildLinkList($PAGE,$LINKSDB)
 function computeThumbnail($url,$href=false)
 {
     if (!$GLOBALS['config']['ENABLE_THUMBNAILS']) return array();
-    if ($href==false) $href=$url;
+    if ($href!=false and !empty($href)) $url=$href;
 
     // For most hosts, the URL of the thumbnail can be easily deduced from the URL of the link.
     // (e.g. http://www.youtube.com/watch?v=spVypYk4kto --->  http://img.youtube.com/vi/spVypYk4kto/default.jpg )
