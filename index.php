@@ -886,7 +886,8 @@ function showDailyRSS() {
         foreach ($linkdates as $linkdate) {
             $l = $LINKSDB[$linkdate];
             $l['formatedDescription'] = nl2br(keepMultipleSpaces(text2clickable($l['description'])));
-            $l['thumbnail'] = "1st".thumbnail($l['url'], isset($l['thumb']) ? $l['thumb'] : False);
+            $thumb_url = isset($l['thumb']) ? $l['thumb'] : false;
+            $l['thumbnail'] = thumbnail($l['url'], $thumb_url);
             $l['timestamp'] = linkdate2timestamp($l['linkdate']);
             if (startsWith($l['url'], '?')) {
                 $l['url'] = index_url($_SERVER) . $l['url'];  // make permalink URL absolute
@@ -950,7 +951,8 @@ function showDaily()
         uasort($taglist, 'strcasecmp');
         $linksToDisplay[$key]['taglist']=$taglist;
         $linksToDisplay[$key]['formatedDescription']=nl2br(keepMultipleSpaces(text2clickable($link['description'])));
-        $linksToDisplay[$key]['thumbnail'] = thumbnail($link['url'], isset($link['thumb']) ? $link['thumb'] : False);
+        $thumb_url = isset($l['thumb']) ? $l['thumb'] : false;
+        $linksToDisplay[$key]['thumbnail'] = thumbnail($link['url'], $thumb_url);
         $linksToDisplay[$key]['timestamp'] = linkdate2timestamp($link['linkdate']);
     }
 
@@ -1072,7 +1074,8 @@ function renderPage()
         foreach($links as $link)
         {
             $permalink='?'.escape(smallhash($link['linkdate']));
-            $thumb=lazyThumbnail($link['url'], isset($link['thumb']) ? $link['thumb'] : False);
+            $thumb_url = isset($l['thumb']) ? $l['thumb'] : false;
+            $thumb = lazyThumbnail($link['url'], $thumb_url);
             if ($thumb!='') // Only output links which have a thumbnail.
             {
                 $link['thumbnail']=$thumb; // Thumbnail HTML code.
